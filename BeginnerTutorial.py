@@ -41,15 +41,24 @@ WHITE = (255, 255, 255)
 SCREEN_WIDTH = 400
 SCREEN_HEIGHT = 600
 SPEED = 5
+SCORE = 0 # Creating score counter
+
+# Setting up Fonts
+font = pygame.font.SysFont("Verdana", 60)
+font_small = pygame.font.SysFont("Verdana", 20)
+game_over = font.render("GAME OVER", True, BLACK)
+
+# Loads a background from an image
+background = pygame.image.load("AnimatedStreet.png")
 
 # Create a white screen
 DISPLAYSURF = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 DISPLAYSURF.fill(WHITE)
 pygame.display.set_caption("Game")
 
-
 # Defining the enemy class
 class Enemy(pygame.sprite.Sprite):
+
     def __init__(self):
         super().__init__()
         self.image = pygame.image.load("Enemy.png")
@@ -57,8 +66,10 @@ class Enemy(pygame.sprite.Sprite):
         self.rect = self.surf.get_rect(center = (random.randint(40,SCREEN_WIDTH-40), 0))
 
     def move(self):
+        global SCORE
         self.rect.move_ip(0, SPEED)
         if self.rect.top > 600:
+            SCORE += 1
             self.rect.top = 0
             self.rect.center = (random.randint(30,370), 0)
 
@@ -121,7 +132,9 @@ while True:
             pygame.quit()
             sys.exit()
 
-    DISPLAYSURF.fill(WHITE)
+    DISPLAYSURF.blit(background, (0, 0))
+    scores = font_small.render(str(SCORE), True, BLACK)
+    DISPLAYSURF.blit(scores, (10, 10))
 
     # Moves and Re-draws all Sprites
     for entity in all_sprites:
@@ -130,9 +143,13 @@ while True:
 
     # Collision Detection
     if pygame.sprite.spritecollideany(P1, enemies):
-        DISPLAYSURF.fill(RED)
-        pygame.display.update()
+        pygame.mixer.Sound('crash.wav').play()
+        time.sleep(0.5)
 
+        DISPLAYSURF.fill(RED)
+        DISPLAYSURF.blit(game_over, (30, 250))
+
+        pygame.display.update()
         """
         A benefit of the grouping system allows us to call
         the move functions for all sprites and rewdraw them
@@ -140,8 +157,8 @@ while True:
         Player and Enemy class
         """
         for entity in all_sprites:
-
             entity.kill()
+
         time.sleep(2)
         pygame.quit()
         sys.exit()
