@@ -90,6 +90,11 @@ P1 = Player()
 E1 = Enemy()
 
 # Creating Sprites Groups
+"""
+Creates groups for sprites. A sprite group is like a classification.
+It's much easier to deal with two or three groups rather than dozens
+of sprites. Use the add() function to add a sprite to a group.
+"""
 enemies = pygame.sprite.Group()
 enemies.add(E1)
 all_sprites = pygame.sprite.Group()
@@ -97,6 +102,9 @@ all_sprites.add(P1)
 all_sprites.add(E1)
 
 # Adding a new User event
+"""
+Pygame gives us the option to create custom events.
+"""
 INC_SPEED = pygame.USEREVENT + 1
 pygame.time.set_timer(INC_SPEED, 1000)
 
@@ -124,7 +132,15 @@ while True:
     if pygame.sprite.spritecollideany(P1, enemies):
         DISPLAYSURF.fill(RED)
         pygame.display.update()
+
+        """
+        A benefit of the grouping system allows us to call
+        the move functions for all sprites and rewdraw them
+        in just 3 lines of code. draw() functions removed from
+        Player and Enemy class
+        """
         for entity in all_sprites:
+
             entity.kill()
         time.sleep(2)
         pygame.quit()
