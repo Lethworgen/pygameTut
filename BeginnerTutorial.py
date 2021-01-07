@@ -118,7 +118,7 @@ while True:
     # Moves and Re-draws all Sprites
     for entity in all_sprites:
         DISPLAYSURF.blit(entity.image, entity.rect)
-        entity.move
+        entity.move()
 
     # Collision Detection
     if pygame.sprite.spritecollideany(P1, enemies):
